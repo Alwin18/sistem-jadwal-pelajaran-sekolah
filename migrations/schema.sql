@@ -1,31 +1,33 @@
-table user {
-  id bigserial [not null, primary key]
-  username string [not null]
-  password text [not null]
-  role string
-  created_at timestamp
-  updated_at timestamp
-}
+CREATE TABLE "user" (
+    id          BIGSERIAL PRIMARY KEY,
+    username    VARCHAR NOT NULL,
+    password    TEXT NOT NULL,
+    role        VARCHAR,
+    created_at  TIMESTAMP,
+    updated_at  TIMESTAMP
+);
 
-table teacher {
-  id bigserial [not null, primary key]
-  user_id int4 [null, ref: > user.id]
-  name string
-  nik string
-  created_at timestamp
-  updated_at timestamp
-}
+CREATE TABLE teacher (
+    id          BIGSERIAL PRIMARY KEY,
+    user_id     INT,
+    name        VARCHAR,
+    nik         VARCHAR,
+    created_at  TIMESTAMP,
+    updated_at  TIMESTAMP,
+    CONSTRAINT fk_teacher_user FOREIGN KEY (user_id) REFERENCES "user"(id) ON UPDATE CASCADE ON DELETE SET NULL
+);
 
-table schedules {
-  id bigserial [not null, primary key]
-  teacher_id int4 [not null, ref: > teacher.id]
-  class_code string [not null]
-  class_name string [not null]
-  subject_code string [not null]
-  date date
-  jam_ke int4
-  time_start time
-  time_end time
-  created_at timestamp
-  updated_at timestamp
-}
+CREATE TABLE schedules (
+    id           BIGSERIAL PRIMARY KEY,
+    teacher_id   INT NOT NULL,
+    class_code   VARCHAR NOT NULL,
+    class_name   VARCHAR NOT NULL,
+    subject_code VARCHAR NOT NULL,
+    date         DATE,
+    jam_ke       INT,
+    time_start   TIME,
+    time_end     TIME,
+    created_at   TIMESTAMP,
+    updated_at   TIMESTAMP,
+    CONSTRAINT fk_schedules_teacher FOREIGN KEY (teacher_id) REFERENCES teacher(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
